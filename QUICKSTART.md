@@ -1,6 +1,7 @@
 # PatchPoint - Quick Start Guide
 
 ## 📋 Prerequisites
+
 - Node.js v18+
 - MongoDB Atlas account (free tier)
 - Cloudinary account (free tier)
@@ -34,6 +35,7 @@ cp .env.example .env
 ### 2️⃣ Configure Secrets
 
 **backend/.env**
+
 ```dotenv
 PORT=5000
 MONGO_URI=mongodb+srv://user:password@cluster.mongodb.net/potholeDB
@@ -45,6 +47,7 @@ CLOUDINARY_API_SECRET=your_secret
 ```
 
 **frontend/.env** (already configured)
+
 ```dotenv
 VITE_API_URL=http://localhost:5000
 ```
@@ -52,6 +55,7 @@ VITE_API_URL=http://localhost:5000
 ### 3️⃣ Start Both Servers
 
 **Terminal 1 - Backend**
+
 ```bash
 cd backend
 npm run dev
@@ -59,6 +63,7 @@ npm run dev
 ```
 
 **Terminal 2 - Frontend**
+
 ```bash
 cd frontend
 npm run dev
@@ -112,6 +117,7 @@ temp/
 ## 🔑 API Quick Reference
 
 ### Register User
+
 ```bash
 curl -X POST http://localhost:5000/api/auth/signup \
   -H "Content-Type: application/json" \
@@ -123,6 +129,7 @@ curl -X POST http://localhost:5000/api/auth/signup \
 ```
 
 ### Login
+
 ```bash
 curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
@@ -134,11 +141,13 @@ curl -X POST http://localhost:5000/api/auth/login \
 ```
 
 ### Get All Potholes
+
 ```bash
 curl http://localhost:5000/api/potholes
 ```
 
 ### Upload Pothole from Pi
+
 ```bash
 curl -X POST http://localhost:5000/api/potholes/pi-upload \
   -F "image=@/path/to/pothole.jpg" \
@@ -153,11 +162,13 @@ curl -X POST http://localhost:5000/api/potholes/pi-upload \
 ## 📱 Pi Setup (Optional)
 
 ### Install Dependencies
+
 ```bash
 pip3 install requests numpy opencv-python onnx onnxruntime
 ```
 
 ### Configure & Run
+
 ```python
 # In FINAL_INTEGRATION_STORED_VIDEO.py, update:
 BACKEND_URL = "http://your-pc-ip:5000/api/potholes/pi-upload"
@@ -179,26 +190,31 @@ send_to_backend(
 ## 🛠 Common Issues & Fixes
 
 ### "Invalid URL" Error
+
 - Check `VITE_API_URL` in `frontend/.env`
 - Should be `http://localhost:5000` for local dev
 - Restart frontend: `npm run dev`
 
 ### CORS Error in Browser Console
+
 - Check `CORS_ORIGIN` in `backend/.env`
 - Should include `http://localhost:5173,http://localhost:5174`
 - Restart backend: `npm run dev`
 
 ### MongoDB Connection Error
+
 - Verify `MONGO_URI` is correct
 - Check MongoDB Atlas IP whitelist includes your IP
 - Test: `mongosh "your_mongo_uri"`
 
 ### Cloudinary Upload Fails
+
 - Verify `CLOUDINARY_CLOUD_NAME`, `API_KEY`, `API_SECRET`
 - Check Cloudinary dashboard for errors
 - Ensure folder exists: `patchpoint/pi` (auto-created if not)
 
 ### Port Already in Use
+
 ```bash
 # Kill process on port 5000 (Windows)
 Get-NetTCPConnection -LocalPort 5000 | Stop-Process -Force
@@ -212,6 +228,7 @@ lsof -ti:5000 | xargs kill -9
 ## 📚 Development Commands
 
 ### Backend
+
 ```bash
 npm run dev       # Start with hot reload (nodemon)
 npm start         # Start without auto-reload
@@ -219,6 +236,7 @@ npm test          # Run tests (if added)
 ```
 
 ### Frontend
+
 ```bash
 npm run dev       # Start dev server (Vite)
 npm run build     # Build for production
@@ -230,17 +248,20 @@ npm run preview   # Preview production build
 ## 🎨 Features Overview
 
 ### Authentication
+
 - ✅ Signup/Login with JWT
 - ✅ HTTP-only secure cookies
 - ✅ Protected routes (Dashboard, Upload, Comments)
 
 ### Dashboard
+
 - ✅ Real-time stats (total potholes, avg depth, today's count)
 - ✅ Interactive Leaflet map with markers
 - ✅ Auto-refresh every 10s for live Pi detections
 - ✅ Recent potholes table with filtering
 
 ### Upload
+
 - ✅ Drag-and-drop file upload
 - ✅ GPS coordinates input
 - ✅ Depth measurement input
@@ -248,6 +269,7 @@ npm run preview   # Preview production build
 - ✅ Upload to Cloudinary with MongoDB record
 
 ### Pi Integration
+
 - ✅ YOLOv5 ONNX detection
 - ✅ LiDAR depth measurement
 - ✅ GPS coordinates capture
@@ -255,6 +277,7 @@ npm run preview   # Preview production build
 - ✅ Best frame selection
 
 ### Comments (Future)
+
 - 📝 Add comments to potholes
 - 📝 View comment threads
 - 📝 Real-time comment updates

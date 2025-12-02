@@ -7,12 +7,14 @@
 ## 📸 Features
 
 ### 🎯 Smart Detection (Raspberry Pi)
+
 - **YOLOv5 ONNX** neural network detection
 - **LiDAR depth measurement** for accurate hole dimensions
 - **GPS coordinates** capture
 - **Auto-upload** to cloud backend with best frame selection
 
 ### 🌐 Web Dashboard (React + TailwindCSS)
+
 - **Real-time map** showing detected potholes (Leaflet + OpenStreetMap)
 - **Live statistics** (total reports, avg depth, today's detections)
 - **User authentication** (signup/login with JWT)
@@ -21,6 +23,7 @@
 - **Auto-refresh** every 10s for live Pi detection updates
 
 ### 📡 Backend API (Node.js + Express)
+
 - **RESTful endpoints** for auth, potholes, comments, uploads
 - **MongoDB database** for persistent storage
 - **Cloudinary CDN** for image hosting
@@ -32,6 +35,7 @@
 ## 🚀 Quick Start
 
 ### Local Development (5 minutes)
+
 ```bash
 # 1. Backend
 cd backend
@@ -50,11 +54,14 @@ npm run dev
 ```
 
 ### Production Deployment
-- **Frontend**: Deploy to Vercel/Netlify (auto-build from `main`)
+
+- **Frontend**: Deploy to Vercel/Netlify/Render (auto-build from `main`)
 - **Backend**: Deploy to Render/Railway/Heroku
 - **Pi**: Run `FINAL_INTEGRATION_STORED_VIDEO.py` with backend URL
 
-See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for step-by-step instructions.
+🚀 **Quick Deploy Options:**
+- **[RENDER_ONLY_DEPLOYMENT.md](./RENDER_ONLY_DEPLOYMENT.md)** ← Deploy BOTH frontend & backend on Render (recommended!)
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete guide with all options (Vercel/Netlify/Render/Railway/Heroku)
 
 ---
 
@@ -99,6 +106,7 @@ temp/
 ## 🔑 Environment Variables
 
 ### Backend Required (`backend/.env`)
+
 ```dotenv
 PORT=5000
 MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/potholeDB
@@ -110,12 +118,14 @@ CLOUDINARY_API_SECRET=your_secret
 ```
 
 ### Frontend Required (`frontend/.env`)
+
 ```dotenv
 VITE_API_URL=http://localhost:5000        # Local dev
 # VITE_API_URL=https://your-backend.com  # Production
 ```
 
 ### Raspberry Pi (`FINAL_INTEGRATION_STORED_VIDEO.py`)
+
 ```python
 BACKEND_URL = "http://192.168.1.50:5000/api/potholes/pi-upload"  # Update IP
 ```
@@ -125,37 +135,42 @@ BACKEND_URL = "http://192.168.1.50:5000/api/potholes/pi-upload"  # Update IP
 ## 📡 API Endpoints
 
 ### Authentication
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/auth/signup` | ❌ | Register new user |
-| POST | `/api/auth/login` | ❌ | Login user (returns JWT) |
-| POST | `/api/auth/logout` | ✅ | Logout (clear cookie) |
-| GET | `/api/auth/me` | ✅ | Get current user |
+
+| Method | Endpoint           | Auth | Description              |
+| ------ | ------------------ | ---- | ------------------------ |
+| POST   | `/api/auth/signup` | ❌   | Register new user        |
+| POST   | `/api/auth/login`  | ❌   | Login user (returns JWT) |
+| POST   | `/api/auth/logout` | ✅   | Logout (clear cookie)    |
+| GET    | `/api/auth/me`     | ✅   | Get current user         |
 
 ### Potholes
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/potholes` | ❌ | List all potholes |
-| POST | `/api/potholes` | ✅ | User upload pothole |
-| POST | `/api/potholes/pi-upload` | ❌ | Pi auto-upload pothole |
-| GET | `/api/potholes/:id` | ❌ | Get single pothole |
+
+| Method | Endpoint                  | Auth | Description            |
+| ------ | ------------------------- | ---- | ---------------------- |
+| GET    | `/api/potholes`           | ❌   | List all potholes      |
+| POST   | `/api/potholes`           | ✅   | User upload pothole    |
+| POST   | `/api/potholes/pi-upload` | ❌   | Pi auto-upload pothole |
+| GET    | `/api/potholes/:id`       | ❌   | Get single pothole     |
 
 ### Comments
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| GET | `/api/comments` | ❌ | List all comments |
-| POST | `/api/comments` | ✅ | Add comment to pothole |
+
+| Method | Endpoint        | Auth | Description            |
+| ------ | --------------- | ---- | ---------------------- |
+| GET    | `/api/comments` | ❌   | List all comments      |
+| POST   | `/api/comments` | ✅   | Add comment to pothole |
 
 ### Upload
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| POST | `/api/upload/image` | ✅ | Upload image to Cloudinary |
+
+| Method | Endpoint            | Auth | Description                |
+| ------ | ------------------- | ---- | -------------------------- |
+| POST   | `/api/upload/image` | ✅   | Upload image to Cloudinary |
 
 ---
 
 ## 🎯 Workflow Example
 
 ### 1. User Signs Up & Logs In
+
 ```bash
 POST /api/auth/signup
 {
@@ -167,6 +182,7 @@ POST /api/auth/signup
 ```
 
 ### 2. Frontend Fetches Potholes
+
 ```bash
 GET /api/potholes
 # Returns: [{ _id, imageUrl, gpsLat, gpsLon, depthCm, timestamp, ... }]
@@ -174,6 +190,7 @@ GET /api/potholes
 ```
 
 ### 3. Pi Detects & Uploads Pothole
+
 ```bash
 POST /api/potholes/pi-upload
 Content-Type: multipart/form-data
@@ -182,6 +199,7 @@ Content-Type: multipart/form-data
 ```
 
 ### 4. Dashboard Shows New Detection
+
 ```javascript
 // Frontend polls GET /api/potholes every 10s
 // New Pi detection automatically appears on map & table
@@ -192,6 +210,7 @@ Content-Type: multipart/form-data
 ## 🛠 Tech Stack
 
 ### Frontend
+
 - **React 18** - UI library
 - **Vite 5** - Build tool (blazing fast)
 - **TailwindCSS 3** - Utility-first styling with glassmorphism
@@ -201,6 +220,7 @@ Content-Type: multipart/form-data
 - **React Router v6** - Client-side routing
 
 ### Backend
+
 - **Node.js 18** - Runtime
 - **Express 4** - Web framework
 - **MongoDB + Mongoose** - NoSQL database
@@ -211,6 +231,7 @@ Content-Type: multipart/form-data
 - **CORS** - Cross-origin requests
 
 ### Raspberry Pi
+
 - **Python 3.8+** - Runtime
 - **YOLOv5** - Object detection
 - **OpenCV** - Image processing
@@ -223,6 +244,7 @@ Content-Type: multipart/form-data
 ## 🚀 Deployment Steps
 
 ### 1. Deploy Backend (Render / Railway / Heroku)
+
 ```bash
 # Select "Deploy from GitHub"
 # Set environment variables (MongoDB, Cloudinary, JWT_SECRET)
@@ -230,6 +252,7 @@ Content-Type: multipart/form-data
 ```
 
 ### 2. Deploy Frontend (Vercel / Netlify)
+
 ```bash
 # Select "Import from Git"
 # Build command: npm run build
@@ -239,6 +262,7 @@ Content-Type: multipart/form-data
 ```
 
 ### 3. Update Configs
+
 ```bash
 # Backend: Update CORS_ORIGIN to frontend domain
 # Frontend: Update VITE_API_URL to backend domain
@@ -252,6 +276,7 @@ Content-Type: multipart/form-data
 ## 📊 Database Schema
 
 ### Users
+
 ```javascript
 {
   _id: ObjectId,
@@ -263,6 +288,7 @@ Content-Type: multipart/form-data
 ```
 
 ### Potholes
+
 ```javascript
 {
   _id: ObjectId,
@@ -277,6 +303,7 @@ Content-Type: multipart/form-data
 ```
 
 ### Comments
+
 ```javascript
 {
   _id: ObjectId,
@@ -292,22 +319,26 @@ Content-Type: multipart/form-data
 ## 🐛 Troubleshooting
 
 ### "Invalid URL" Frontend Error
+
 → Check `VITE_API_URL` in `frontend/.env`
 → Should be `http://localhost:5000` (local) or `https://your-backend.com` (prod)
 → Restart frontend: `npm run dev`
 
 ### CORS Error
+
 → Backend `CORS_ORIGIN` must include frontend domain
 → Local: `http://localhost:5173,http://localhost:5174`
 → Prod: `https://your-frontend-domain.com`
 → Restart backend after changes
 
 ### MongoDB Connection Error
+
 → Check `MONGO_URI` is valid
 → Add your IP to MongoDB Atlas whitelist
 → Test with `mongosh` CLI
 
 ### Port Already in Use
+
 ```bash
 # Windows
 Get-NetTCPConnection -LocalPort 5000 | Stop-Process -Force
@@ -366,12 +397,14 @@ git push origin main
 ## 📈 Performance Optimizations
 
 - **Frontend**
+
   - TailwindCSS purges unused styles
   - Vite uses esbuild for fast bundling
   - Auto-polling (10s) prevents excessive API calls
   - Images served from Cloudinary CDN
 
 - **Backend**
+
   - MongoDB indexes on gpsLat, gpsLon, timestamp
   - JWT caching in HTTP-only cookies
   - Image streaming to Cloudinary (no disk storage)

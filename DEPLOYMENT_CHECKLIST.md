@@ -17,7 +17,8 @@
 
 ## 🔄 Frontend Deployment (Choose One)
 
-### **Option A: Vercel (Recommended)**
+### **Option A: Vercel (Easiest for Frontend)**
+
 - [ ] Go to [vercel.com](https://vercel.com)
 - [ ] Click "Import Project"
 - [ ] Select GitHub repo: `Keerthiii21/temp`
@@ -32,6 +33,7 @@
 - [ ] ✅ Frontend deployed at `*.vercel.app`
 
 ### **Option B: Netlify**
+
 - [ ] Go to [netlify.com](https://netlify.com)
 - [ ] Click "New site from Git"
 - [ ] Select repo: `Keerthiii21/temp`
@@ -44,8 +46,25 @@
 - [ ] Click Deploy
 - [ ] ✅ Frontend deployed at `*.netlify.app`
 
+### **Option C: Render (Both Frontend & Backend on Render)**
+
+- [ ] Go to [render.com](https://render.com)
+- [ ] Click "New +" → "Static Site"
+- [ ] Connect GitHub Repository
+- [ ] Select repo: `Keerthiii21/temp`
+- [ ] Name: `patchpoint-frontend`
+- [ ] Build Command: `cd frontend && npm run build`
+- [ ] Publish Directory: `frontend/dist`
+- [ ] Set Environment Variable:
+  ```
+  VITE_API_URL=https://your-backend-render-url.com
+  ```
+- [ ] Click Deploy
+- [ ] ✅ Frontend deployed at `*.render.com`
+
 ### **After Frontend Deploy:**
-- [ ] Note your frontend URL (e.g., `https://patchpoint.vercel.app`)
+
+- [ ] Note your frontend URL (e.g., `https://patchpoint.vercel.app`, `https://patchpoint.netlify.app`, or `https://patchpoint-frontend.render.com`)
 - [ ] Update backend `CORS_ORIGIN` to include this URL
 - [ ] Restart backend with new CORS setting
 
@@ -54,6 +73,7 @@
 ## 🗄️ Backend Deployment (Choose One)
 
 ### **Option A: Render (Easiest)**
+
 - [ ] Go to [render.com](https://render.com)
 - [ ] Create Account & Verify Email
 - [ ] Click "New +" → "Web Service"
@@ -78,6 +98,7 @@
 - [ ] ✅ Backend deployed at `*.render.com`
 
 ### **Option B: Railway**
+
 - [ ] Go to [railway.app](https://railway.app)
 - [ ] Create Account
 - [ ] New Project → Deploy from GitHub
@@ -87,6 +108,7 @@
 - [ ] ✅ Backend deployed
 
 ### **Option C: Heroku**
+
 - [ ] Go to [heroku.com](https://heroku.com)
 - [ ] Create Account
 - [ ] New App → `patchpoint-backend`
@@ -97,6 +119,7 @@
 - [ ] ✅ Backend deployed at `*.herokuapp.com`
 
 ### **After Backend Deploy:**
+
 - [ ] Note your backend URL (e.g., `https://patchpoint-backend.render.com`)
 - [ ] Update frontend `VITE_API_URL` to this URL
 - [ ] Trigger frontend re-deploy (push to main or manual redeploy)
@@ -135,6 +158,7 @@
 ## 🧪 Post-Deployment Testing
 
 ### Test Frontend
+
 - [ ] Frontend loads: `https://your-frontend-domain.com` ✅
 - [ ] Login page appears (no CORS errors) ✅
 - [ ] Can sign up new account ✅
@@ -144,6 +168,7 @@
 - [ ] Can upload image ✅
 
 ### Test Backend API
+
 ```bash
 # Get all potholes
 curl https://your-backend-url.com/api/potholes
@@ -160,6 +185,7 @@ curl -X POST https://your-backend-url.com/api/auth/login \
 ```
 
 ### Test Pi Upload
+
 ```bash
 curl -X POST https://your-backend-url.com/api/potholes/pi-upload \
   -F "image=@/path/to/image.jpg" \
@@ -221,21 +247,25 @@ After deployment, check these:
 ## 🚨 If Something Goes Wrong
 
 ### CORS Error in Frontend
+
 - [ ] Check backend `CORS_ORIGIN` includes frontend URL
 - [ ] Restart backend deployment (redeploy)
 - [ ] Clear browser cache (Ctrl+Shift+Delete)
 
 ### "Cannot POST" Error
+
 - [ ] Verify backend is running
 - [ ] Check API URL is correct in frontend `.env`
 - [ ] Verify frontend has been redeployed after env change
 
 ### MongoDB Connection Error
+
 - [ ] Check `MONGO_URI` is correct
 - [ ] Whitelist backend IP in MongoDB Atlas
 - [ ] Verify network access is enabled
 
 ### Image Upload Fails
+
 - [ ] Check Cloudinary credentials are correct
 - [ ] Verify Cloudinary folder `patchpoint/pi` exists
 - [ ] Check storage quota (free tier has limits)
@@ -245,6 +275,7 @@ After deployment, check these:
 ## 📊 Monitoring Checklist
 
 ### After 24 Hours of Production:
+
 - [ ] Check Render/Railway/Heroku dashboard for errors
 - [ ] Monitor MongoDB Atlas for storage usage
 - [ ] Check Cloudinary for image uploads
@@ -252,6 +283,7 @@ After deployment, check these:
 - [ ] Check GitHub Actions if any CI/CD configured
 
 ### Weekly Maintenance:
+
 - [ ] Review error logs in deployment platform
 - [ ] Check database growth in MongoDB
 - [ ] Verify all API endpoints are responsive
@@ -266,7 +298,7 @@ Once all checkboxes are ✅, your PatchPoint system is production-ready:
 
 ```
 🌐 Frontend  → vercel.app or netlify.app
-📡 Backend   → render.com or railway.app  
+📡 Backend   → render.com or railway.app
 🗄️  Database  → MongoDB Atlas
 ☁️  Images    → Cloudinary
 📱 Pi        → Running and uploading

@@ -1,29 +1,34 @@
 # PatchPoint Deployment Guide
 
 ## Overview
+
 PatchPoint is a full-stack pothole detection system consisting of:
+
 - **Frontend**: React + Vite + TailwindCSS (deployed to Vercel/Netlify)
 - **Backend**: Node.js + Express (deployed to Render/Railway/Heroku)
 - **Pi Detection**: Python script with YOLOv5 + LiDAR + GPS
 
 ---
 
-## 🚀 Frontend Deployment (Vercel / Netlify)
+## 🚀 Frontend Deployment (Vercel / Netlify / Render)
 
-### Option 1: Deploy to Vercel (Recommended)
+### Option 1: Deploy to Vercel (Recommended for Frontend)
 
 1. **Connect GitHub**
+
    - Go to [vercel.com](https://vercel.com)
    - Click "Import Project"
    - Select your GitHub repository (Keerthiii21/temp)
 
 2. **Configure Build Settings**
+
    - Framework: Vite
    - Build Command: `npm run build`
    - Output Directory: `frontend/dist`
    - Root Directory: `frontend`
 
 3. **Set Environment Variables** (in Vercel Dashboard)
+
    ```
    VITE_API_URL=https://your-backend-url.com
    ```
@@ -35,11 +40,13 @@ PatchPoint is a full-stack pothole detection system consisting of:
 ### Option 2: Deploy to Netlify
 
 1. **Connect GitHub**
+
    - Go to [netlify.com](https://netlify.com)
    - Click "New site from Git"
    - Select your repository
 
 2. **Configure Build Settings**
+
    - Build Command: `cd frontend && npm run build`
    - Publish Directory: `frontend/dist`
    - Add Environment Variable: `VITE_API_URL=https://your-backend-url.com`
@@ -47,10 +54,36 @@ PatchPoint is a full-stack pothole detection system consisting of:
 3. **Deploy**
    - Netlify auto-deploys on push to `main`
 
+### Option 3: Deploy to Render (Both Frontend & Backend on Same Platform)
+
+1. **Create Render Account** at [render.com](https://render.com)
+
+2. **Create New Static Site**
+
+   - Click "New +" → "Static Site"
+   - Connect GitHub Repository
+   - Select repo: `temp`
+   - Name: `patchpoint-frontend`
+   - Build Command: `cd frontend && npm run build`
+   - Publish Directory: `frontend/dist`
+
+3. **Set Environment Variables** (in Render Dashboard)
+
+   ```
+   VITE_API_URL=https://your-backend-url-on-render.com
+   ```
+
+4. **Deploy**
+   - Click Deploy
+   - Render auto-deploys on push to `main`
+   - Your frontend will be at `*.render.com`
+
 ### Post-Deploy: Update Backend URL
+
 After backend is deployed, update the frontend environment variable:
+
 ```bash
-# In Vercel/Netlify Dashboard
+# In Vercel/Netlify/Render Dashboard
 VITE_API_URL=https://your-production-backend.com
 ```
 
@@ -63,6 +96,7 @@ VITE_API_URL=https://your-production-backend.com
 1. **Create Render Account** at [render.com](https://render.com)
 
 2. **Create New Web Service**
+
    - Connect GitHub Repository
    - Select repo: `temp`
    - Name: `patchpoint-backend`
@@ -72,6 +106,7 @@ VITE_API_URL=https://your-production-backend.com
    - Start Command: `npm start`
 
 3. **Set Environment Variables** (in Render Dashboard)
+
    ```
    PORT=5000
    MONGO_URI=<your_mongodb_uri>
@@ -91,9 +126,11 @@ VITE_API_URL=https://your-production-backend.com
 1. **Create Railway Account** at [railway.app](https://railway.app)
 
 2. **New Project → Deploy from GitHub**
+
    - Select repo: `temp`
 
 3. **Configure Service**
+
    - Root Directory: `backend`
    - Add Variables (same as above)
 
@@ -105,13 +142,16 @@ VITE_API_URL=https://your-production-backend.com
 1. **Create Heroku Account** at [heroku.com](https://heroku.com)
 
 2. **Create New App**
+
    - Name: `patchpoint-backend`
 
 3. **Connect GitHub**
+
    - Connect to your repository
    - Enable auto-deploy on main
 
 4. **Set Config Vars** (Heroku Dashboard → Settings → Config Vars)
+
    - Same variables as above
 
 5. **Deploy**
@@ -122,6 +162,7 @@ VITE_API_URL=https://your-production-backend.com
 ## 📱 Pi Deployment (Raspberry Pi)
 
 ### Prerequisites
+
 ```bash
 pip3 install requests numpy opencv-python onnx onnxruntime
 ```
@@ -129,13 +170,16 @@ pip3 install requests numpy opencv-python onnx onnxruntime
 ### Setup
 
 1. **Update Backend URL**
+
    - Edit `FINAL_INTEGRATION_STORED_VIDEO.py`
    - Replace `<PC_IP>` with your backend domain:
+
    ```python
    BACKEND_URL = "https://your-production-backend.com/api/potholes/pi-upload"
    ```
 
 2. **Install Dependencies**
+
    ```bash
    pip3 install requests
    ```
@@ -146,7 +190,9 @@ pip3 install requests numpy opencv-python onnx onnxruntime
    ```
 
 ### Integration with Your Pipeline
+
 In your existing detection code, call:
+
 ```python
 from FINAL_INTEGRATION_STORED_VIDEO import send_to_backend
 
@@ -165,10 +211,12 @@ send_to_backend(
 ## 🔗 API Endpoints
 
 ### Public Endpoints (No Auth Required)
+
 - `GET /api/potholes` - List all potholes
 - `POST /api/potholes/pi-upload` - Pi upload (multipart/form-data)
 
 ### Protected Endpoints (Auth Required)
+
 - `POST /api/auth/signup` - Register user
 - `POST /api/auth/login` - Login user
 - `POST /api/auth/logout` - Logout user
@@ -176,6 +224,7 @@ send_to_backend(
 - `POST /api/potholes` - User upload pothole
 
 ### Upload Format (Pi)
+
 ```bash
 curl -X POST 'https://your-backend.com/api/potholes/pi-upload' \
   -F "image=@/path/to/image.jpg" \
@@ -190,6 +239,7 @@ curl -X POST 'https://your-backend.com/api/potholes/pi-upload' \
 ## 📊 Database Setup
 
 ### MongoDB Atlas
+
 1. Create account at [mongodb.com/cloud/atlas](https://mongodb.com/cloud/atlas)
 2. Create free cluster
 3. Get connection string: `mongodb+srv://user:pass@cluster.mongodb.net/dbname`
@@ -211,14 +261,17 @@ curl -X POST 'https://your-backend.com/api/potholes/pi-upload' \
 ## 🌐 Domain & CORS Configuration
 
 ### Update CORS After Deployment
+
 Once you have your frontend domain, update backend `CORS_ORIGIN`:
 
 **For Render Dashboard:**
+
 ```
 CORS_ORIGIN=https://your-frontend-domain.com,https://your-frontend-domain.com
 ```
 
 **For Local Testing:**
+
 ```
 CORS_ORIGIN=http://localhost:5173,http://localhost:5174
 ```
@@ -228,6 +281,7 @@ CORS_ORIGIN=http://localhost:5173,http://localhost:5174
 ## ✅ Verification Checklist
 
 After deployment:
+
 - [ ] Frontend loads at `https://your-frontend-domain.com`
 - [ ] Backend API responds at `https://your-backend.com/api/potholes`
 - [ ] Login works without CORS errors
@@ -242,20 +296,24 @@ After deployment:
 ## 🐛 Troubleshooting
 
 ### "Invalid URL" Frontend Error
+
 - Check `VITE_API_URL` in environment variables
 - Ensure backend domain is correct: `https://your-backend.com`
 - Restart frontend build
 
 ### CORS Error
+
 - Update backend `CORS_ORIGIN` to include your frontend domain
 - Make sure to restart backend after env changes
 
 ### Pi Upload Fails
+
 - Verify `BACKEND_URL` in `FINAL_INTEGRATION_STORED_VIDEO.py`
 - Check that Pi can reach backend (test with `curl`)
 - Ensure Cloudinary credentials are set in backend
 
 ### Slow Pothole Polling
+
 - Frontend polls every 10 seconds (see Dashboard.jsx)
 - Reduce interval in code if needed, but watch API rate limits
 
