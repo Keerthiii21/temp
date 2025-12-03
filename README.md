@@ -60,6 +60,7 @@ npm run dev
 - **Pi**: Run `FINAL_INTEGRATION_STORED_VIDEO.py` with backend URL
 
 🚀 **Quick Deploy Options:**
+
 - **[RENDER_ONLY_DEPLOYMENT.md](./RENDER_ONLY_DEPLOYMENT.md)** ← Deploy BOTH frontend & backend on Render (recommended!)
 - **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete guide with all options (Vercel/Netlify/Render/Railway/Heroku)
 

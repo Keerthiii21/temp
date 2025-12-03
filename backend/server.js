@@ -10,7 +10,7 @@ dotenv.config();
 console.log('JWT_SECRET loaded:', !!process.env.JWT_SECRET);
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = parseInt(process.env.PORT, 10) || 5000;
 
 // Connect DB
 connectDB();
