@@ -14,16 +14,19 @@ Create a new Web Service on Render and connect your GitHub repository (the `main
 - Environment: `Node` (Render will detect Node)
 
 Build & Start settings
+
 - Build Command: `cd backend && npm install`
 - Start Command: `cd backend && npm run start`
   - Note: `npm run start` should run `node server.js` (check `backend/package.json` `scripts.start`).
 
 Advanced
+
 - Instance type: Free or Starter for testing; choose paid for production.
 - Region: Choose nearest region to your users.
 - Auto Deploy: enable to deploy on pushes to `main`.
 
 Required environment variables (set in Render dashboard -> Environment):
+
 - `MONGO_URI` — MongoDB Atlas connection string (example: `mongodb+srv://<user>:<pass>@cluster0.mongodb.net/potholeDB`)
 - `JWT_SECRET` — strong random secret for signing tokens
 - `CLOUDINARY_CLOUD_NAME` — Cloudinary cloud name
@@ -34,10 +37,12 @@ Required environment variables (set in Render dashboard -> Environment):
 - `PORT` — usually not required on Render (Render sets a dynamic port in `PORT`), but you can set to `5000` for local parity
 
 Health check & static files
+
 - Health check path: `/api/potholes` (or `/`), Method: `GET` — Render will see 200 if the backend is healthy.
 - Serve static visualization: `backend/public/best_pothole_map.html` is served by Express at `/best_pothole_map.html`.
 
 Tips
+
 - Ensure `backend/.env` is NOT committed to the repository. Use Render environment variables for secrets.
 - If you accidentally committed secrets, rotate them immediately (DB and Cloudinary) and remove the file from repo history (see Security section below).
 
@@ -46,6 +51,7 @@ Tips
 ## 2) Frontend — Static Site (recommended) or Web Service
 
 Option A — Static Site (recommended)
+
 - Create a new Static Site in Render and connect your GitHub repo.
 - Build Command: `cd frontend && npm install && npm run build`
 - Publish Directory: `frontend/dist`
@@ -53,11 +59,13 @@ Option A — Static Site (recommended)
   - `VITE_API_URL` = `https://<your-backend>.onrender.com` (example: `https://temp-pdb7.onrender.com`)
 
 Option B — Web Service (serve `dist` with a small static server)
+
 - Build Command: `cd frontend && npm install && npm run build`
 - Start Command: `cd frontend && npx serve -s dist -l $PORT` (or configure a lightweight server script)
 - Environment: set `VITE_API_URL` as above
 
 Notes on `VITE_API_URL`
+
 - The frontend reads `import.meta.env.VITE_API_URL` (in `frontend/src/api/axiosClient.js`). Set this in Render to point to your backend.
 - Do NOT hardcode the URL in the codebase — use the environment variable.
 
@@ -69,6 +77,7 @@ Notes on `VITE_API_URL`
 - Example allowed origin (backend env): `https://<your-frontend>.onrender.com`
 
 Cookies and SameSite
+
 - If using cookies, ensure the backend sets cookie attributes appropriate for cross-site usage. For production: `secure: true`, `sameSite: 'lax'` or `none` (if cross-site), and set `domain` if needed.
 
 ---
@@ -96,7 +105,7 @@ Cookies and SameSite
 
 If you accidentally committed `.env` with secrets (API keys, DB creds):
 
-1. Remove file from repository (do *not* keep it in history):
+1. Remove file from repository (do _not_ keep it in history):
 
 ```powershell
 git rm --cached backend/.env
@@ -133,6 +142,7 @@ After purge: rotate credentials in MongoDB Atlas and Cloudinary.
 ---
 
 If you want, I can:
+
 - Prepare exact Render dashboard screenshots with the values filled in (I will list the values and where to paste them).
 - Run a local `curl` checklist to verify endpoints prior to Render deployment.
 

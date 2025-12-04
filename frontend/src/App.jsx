@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard'
 import UploadPage from './pages/UploadPage'
 import MapPage from './pages/MapPage'
 import CommentsPage from './pages/CommentsPage'
+import PiMapViewer from './pages/PiMapViewer'
 import PrivateRoute from './components/PrivateRoute'
 
 export default function App() {
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/upload" element={<PrivateRoute><UploadPage /></PrivateRoute>} />
           <Route path="/map" element={<PrivateRoute><MapPage /></PrivateRoute>} />
           <Route path="/comments" element={<PrivateRoute><CommentsPage /></PrivateRoute>} />
+          <Route path="/pi-map" element={<PrivateRoute><PiMapViewer /></PrivateRoute>} />
         </Routes>
       </main>
     </div>

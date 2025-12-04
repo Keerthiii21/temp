@@ -26,6 +26,9 @@ console.log('CORS origins:', corsOrigins);
 
 app.use(cors({ origin: corsOrigins, credentials: true }));
 
+// Serve uploads directory statically (for ZIP extraction and Folium maps)
+app.use('/uploads', express.static('uploads'));
+
 // Routes
 app.use('/api/auth', require('./src/routes/authRoutes'));
 app.use('/api/potholes', require('./src/routes/potholeRoutes'));
@@ -33,6 +36,8 @@ app.use('/api/potholes', require('./src/routes/potholeRoutes'));
 app.use('/api/potholes', require('./src/routes/piUploadRoute'));
 app.use('/api/comments', require('./src/routes/commentRoutes'));
 app.use('/api/upload', require('./src/routes/uploadRoutes'));
+// ZIP upload route (isolated feature for Pi Folium maps)
+app.use('/api/zip', require('./src/routes/zipUploadRoute'));
 
 app.get('/', (req, res) => res.send({ ok: true, message: 'PATCHPOINT API' }));
 

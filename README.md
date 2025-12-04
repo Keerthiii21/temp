@@ -1,6 +1,7 @@
 # PatchPoint
 
 PatchPoint is a pothole reporting and visualization platform that includes:
+
 - A Node.js + Express backend (MongoDB + Cloudinary) providing REST APIs.
 - A Vite + React frontend (TailwindCSS) for reporting and viewing potholes.
 - A Raspberry Pi uploader script to send detections to the backend.
@@ -12,11 +13,12 @@ This repository contains the full-stack project (backend, frontend, Pi integrati
 ## Quick Start (local development)
 
 Prerequisites:
+
 - Node.js (v16+ recommended)
 - npm
 - A MongoDB URI (Atlas or local)
 
-1) Backend
+1. Backend
 
 ```powershell
 cd backend
@@ -27,7 +29,7 @@ npm run dev
 
 The backend listens on the port defined in `backend/.env` (`PORT`, default `5000`).
 
-2) Frontend
+2. Frontend
 
 ```powershell
 cd frontend
@@ -39,7 +41,7 @@ npm run dev
 Frontend dev server runs on Vite's default port (usually 5173); the frontend uses
 the environment variable `VITE_API_URL` to call the backend. See `frontend/.env.example`.
 
-3) Raspberry Pi
+3. Raspberry Pi
 
 The Pi script in the repository uploads detection results to the backend endpoint
 `POST /api/potholes/pi`. Do not modify the backend or Pi script when changing the frontend.
@@ -80,10 +82,12 @@ This makes switching between local and deployed backends simple by changing the 
 High-level steps:
 
 1. Create a Render Web Service for the backend.
+
    - Set the start command to: `npm run start` (or use the `web` service configured in `package.json`).
-   - Add environment variables (MONGO_URI, JWT_SECRET, CLOUDINARY_*, CORS_ORIGIN, PORT if needed).
+   - Add environment variables (MONGO*URI, JWT_SECRET, CLOUDINARY*\*, CORS_ORIGIN, PORT if needed).
 
 2. Create a Static Site (or Web Service) for the frontend.
+
    - If using Static Site: build locally or via Render build command `npm run build` and point static site to `frontend/dist`.
    - Set `VITE_API_URL` in the frontend site's environment variables to your backend Render URL (e.g. `https://temp-pdb7.onrender.com`).
 
@@ -94,24 +98,28 @@ High-level steps:
 ## Useful commands
 
 Start backend (dev):
+
 ```powershell
 cd backend
 npm run dev
 ```
 
 Start frontend (dev):
+
 ```powershell
 cd frontend
 npm run dev
 ```
 
 Build frontend:
+
 ```powershell
 cd frontend
 npm run build
 ```
 
 Run backend tests (if any):
+
 ```powershell
 cd backend
 npm test
@@ -130,6 +138,7 @@ npm test
 ---
 
 If you'd like, I can also add a short `CONTRIBUTING.md` and a deployment checklist for Render. Want me to add that next?
+
 # 🚨 PatchPoint: Pothole Detection System
 
 > **Live pothole detection, reporting, and tracking system** using Raspberry Pi + ML + Full-stack Web App
