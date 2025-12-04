@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { useNavigate } from 'react-router-dom'
 import { listPotholes } from '../api/potholeApi'
 import StatsCard from '../components/StatsCard'
 import Card from '../components/Card'
-import Button from '../components/Button'
-import { Zap, Gauge, Clock, MapPin, Package } from 'lucide-react'
+import { Zap, Gauge, Clock, MapPin } from 'lucide-react'
 
 export default function Dashboard(){
   const [potholes, setPotholes] = useState([])
   const [stats, setStats] = useState({ total: 0, avgDepth: 0, today: 0, lastTime: null })
-  const navigate = useNavigate()
 
   const fetch = async ()=>{
     try{
@@ -41,19 +38,6 @@ export default function Dashboard(){
         <div className="mb-8">
           <h1 className="text-4xl font-poppins font-bold mb-2">Dashboard</h1>
           <p className="text-dark-400">Monitor potholes in real-time</p>
-        </div>
-
-        {/* Optional Pi Map Viewer Button */}
-        <div className="mb-8">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => navigate('/pi-map')}
-            className="flex items-center gap-2"
-          >
-            <Package className="w-4 h-4" />
-            View Pi Map Upload
-          </Button>
         </div>
 
         {/* Stats Grid */}

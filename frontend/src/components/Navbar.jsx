@@ -17,7 +17,6 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 glass-lg border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2 text-xl font-poppins font-bold">
           <div className="p-2 bg-blue-500/20 rounded-lg">
             <MapPin className="w-5 h-5 text-blue-400" />
@@ -27,19 +26,27 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-8">
           {isAuthenticated && (
             <>
               <Link to="/dashboard" className="text-dark-300 hover:text-white transition-colors">Dashboard</Link>
               <Link to="/upload" className="text-dark-300 hover:text-white transition-colors">Upload</Link>
-              <Link to="/map" className="text-dark-300 hover:text-white transition-colors">Map</Link>
+
+              {/* ⭐ MODIFIED MAP LINK (Desktop) */}
+              <a 
+                href="https://temp-pdb7.onrender.com/map"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-dark-300 hover:text-white transition-colors"
+              >
+                Map
+              </a>
+
               <Link to="/comments" className="text-dark-300 hover:text-white transition-colors">Comments</Link>
             </>
           )}
         </div>
 
-        {/* User Menu */}
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <>
@@ -67,7 +74,6 @@ export default function Navbar() {
             </div>
           )}
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-dark-700/50 transition-colors"
@@ -77,14 +83,24 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden animate-fade-in border-t border-white/10 bg-dark-850/40 backdrop-blur-md px-6 py-4 space-y-3">
           {isAuthenticated ? (
             <>
               <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="block text-dark-300 hover:text-white">Dashboard</Link>
               <Link to="/upload" onClick={() => setMenuOpen(false)} className="block text-dark-300 hover:text-white">Upload</Link>
-              <Link to="/map" onClick={() => setMenuOpen(false)} className="block text-dark-300 hover:text-white">Map</Link>
+
+              {/* ⭐ MODIFIED MAP LINK (Mobile) */}
+              <a
+                href="https://temp-pdb7.onrender.com/map"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="block text-dark-300 hover:text-white"
+              >
+                Map
+              </a>
+
               <Link to="/comments" onClick={() => setMenuOpen(false)} className="block text-dark-300 hover:text-white">Comments</Link>
               <hr className="border-white/10" />
               <div className="flex items-center gap-2 mb-3">
