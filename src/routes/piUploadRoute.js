@@ -25,7 +25,7 @@ async function getAddressFromCoords(lat, lon) {
 }
 
 // -------------------------------------------------------------
-// POST /api/potholes/pi-upload   <-- Pi sends: image + lat + lon + depth + timestamp
+// POST /api/potholes/pi-upload
 // -------------------------------------------------------------
 router.post('/pi-upload', upload.single('image'), async (req, res) => {
   try {
@@ -35,7 +35,7 @@ router.post('/pi-upload', upload.single('image'), async (req, res) => {
       return res.status(400).json({ success: false, message: 'No image uploaded' });
     }
 
-    // ⭐ Get address from GPS
+    // ⭐ Convert GPS to address
     const address = await getAddressFromCoords(lat, lon);
 
     // Upload image to Cloudinary
@@ -51,28 +51,30 @@ router.post('/pi-upload', upload.single('image'), async (req, res) => {
           });
         }
 
-        // ⭐ Create pothole document
+        // ⭐ Save pothole record
         const pothole = new Pothole({
           imageUrl: result.secure_url,
           gpsLat: parseFloat(lat) || 0,
           gpsLon: parseFloat(lon) || 0,
           depthCm: depth ? parseFloat(depth) : undefined,
-          address: address || "-",  // ⭐ SAVE ADDRESS
+          address: address || "-",   // ⭐ Save address
           timestamp: timestamp ? new Date(timestamp) : new Date()
         });
 
         await pothole.save();
-
         return res.json({ success: true, pothole });
       }
     );
 
-    // Pipe buffer → Cloudinary
+    // Stream image buffer → upload
     streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
 
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ success: false, message: 'Server error' });
+    return res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 });
 
