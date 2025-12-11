@@ -14,7 +14,7 @@ async function getAddressFromCoords(lat, lon) {
   try {
     const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
     const res = await axios.get(url, {
-      headers: { "User-Agent": "PatchPoint/1.0 (student project)" }
+      headers: { "User-Agent": "PatchPoint/1.0 Student Project" }
     });
 
     return res.data?.display_name || null;
@@ -44,11 +44,7 @@ router.post('/pi-upload', upload.single('image'), async (req, res) => {
       async (error, result) => {
         if (error) {
           console.error('Cloudinary upload error:', error);
-          return res.status(500).json({
-            success: false,
-            message: 'Image upload failed',
-            error
-          });
+          return res.status(500).json({ success: false, message: 'Image upload failed', error });
         }
 
         // ⭐ Save pothole record
@@ -62,6 +58,7 @@ router.post('/pi-upload', upload.single('image'), async (req, res) => {
         });
 
         await pothole.save();
+
         return res.json({ success: true, pothole });
       }
     );
