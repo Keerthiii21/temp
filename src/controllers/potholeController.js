@@ -1,51 +1,49 @@
+const axios = require("axios");
+const Pothole = require("../models/Pothole");
+
 exports.createFromPi = async (req, res) => {
   try {
-    const { pothole_id, gps_lat, gps_lon, lidar_cm, image, timestamp } = req.body;
+    const { gps_lat, gps_lon, lidar_cm, image, timestamp } = req.body;
 
-    // ---------- TIMESTAMP FIX ----------
-    let finalTimestamp = Date.now();
-    if (timestamp) {
-      try {
-        finalTimestamp = new Date(timestamp);
-      } catch {
-        finalTimestamp = Date.now();
-      }
+    if (!gps_lat || !gps_lon) {
+      return res.status(400).json({ success: false, message: "Missing GPS" });
     }
 
-    // ---------- REVERSE GEOCODING ----------
+    // ---- FIX TIMESTAMP ----
+    const ts =
+      timestamp
+        ? new Date(timestamp)
+        : new Date(); // fallback
+
+    const localTimestamp = ts.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+
+    // ---- REVERSE GEOCODING ----
+    const geoURL = `https://nominatim.openstreetmap.org/reverse?lat=${gps_lat}&lon=${gps_lon}&format=json`;
     let address = null;
+
     try {
-      if (gps_lat && gps_lon) {
-        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${gps_lat}&lon=${gps_lon}`;
-        const response = await fetch(url, {
-          headers: { "User-Agent": "PatchPoint-App" }
-        });
-        const data = await response.json();
-        address = data.display_name || null;
-      }
-    } catch (err) {
-      console.log("Reverse geocoding failed:", err);
+      const geo = await axios.get(geoURL, {
+        headers: { "User-Agent": "PatchPoint/1.0" }
+      });
+      address = geo.data?.display_name || null;
+    } catch (e) {
+      console.log("Reverse geocoding failed:", e.message);
     }
 
-    // ---------- PREPARE PAYLOAD ----------
-    const payload = {
+    // ---- SAVE TO DB ----
+    const pothole = await Pothole.create({
       gpsLat: gps_lat,
       gpsLon: gps_lon,
       depthCm: lidar_cm,
-      timestamp: finalTimestamp,
-      address: address
-    };
-
-    if (image) payload.imageUrl = image;
-    if (pothole_id) payload._id = pothole_id;
-
-    // ---------- SAVE ----------
-    const pothole = await Pothole.create(payload);
+      address,
+      timestamp: localTimestamp,
+      imageUrl: image || null
+    });
 
     return res.json({ success: true, pothole });
 
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ success: false, message: 'Server error' });
+    return res.status(500).json({ success: false, message: "Server error" });
   }
 };
