@@ -10,11 +10,7 @@ exports.createFromPi = async (req, res) => {
     }
 
     // ---- FIX TIMESTAMP ----
-    const ts =
-      timestamp
-        ? new Date(timestamp)
-        : new Date(); // fallback
-
+    const ts = timestamp ? new Date(timestamp) : new Date();
     const localTimestamp = ts.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
 
     // ---- REVERSE GEOCODING ----
