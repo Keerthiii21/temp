@@ -31,8 +31,8 @@ export default function MapPage(){
       }
     } catch (e) {
       console.error('Failed to geocode pothole:', e.message || e);
-      // fallback: show coords as address
-      setSelectedPothole({ ...ph, address: `${ph.gpsLat}, ${ph.gpsLon}` });
+      // fallback: mark address as unavailable (do NOT show raw coords)
+      setSelectedPothole({ ...ph, address: 'Address unavailable' });
     }
   }
 
@@ -88,7 +88,7 @@ export default function MapPage(){
                 </div>
                 <div>
                   <p className="text-dark-400 text-xs">ADDRESS</p>
-                  <p className="font-medium">{selectedPothole.address}</p>
+                  <p className="font-medium">{selectedPothole.address || 'Address unavailable'}</p>
                 </div>
                 <div>
                   <p className="text-dark-400 text-xs">REPORTED</p>

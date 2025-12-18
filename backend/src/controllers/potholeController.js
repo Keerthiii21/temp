@@ -25,8 +25,9 @@ exports.createFromPi = async (req, res) => {
       return res.status(400).json({ success: false, message: "Missing or invalid GPS" });
     }
 
-    // ---- TIMESTAMP: parse and store a Date object (keep DB as UTC-based Date) ----
-    let ts = parseIncomingTimestamp(timestamp);
+    // ---- TIMESTAMP: set receipt time server-side (UTC) ----
+    let ts = new Date();
+    console.log('createFromPi received: coords', gpsLat, gpsLon, 'server timestamp(UTC ms):', ts.getTime());
 
     // ---- REVERSE GEOCODING ----
     const geoURL = `https://nominatim.openstreetmap.org/reverse?lat=${gps_lat}&lon=${gps_lon}&format=json`;
@@ -109,8 +110,10 @@ exports.listPotholes = async (req, res) => {
             p.address = full; // reflect change in current response
             console.log('Backfilled address for', p._id, full);
           } else {
-            // fallback: coords string instead of empty
-            p.address = `${p.gpsLat}, ${p.gpsLon}`;
+            // fallback: store a friendly non-coordinate placeholder so UI does not display GPS
+            const unavailable = 'Address unavailable';
+            await Pothole.findByIdAndUpdate(p._id, { address: unavailable });
+            p.address = unavailable;
           }
         } catch (e) {
           console.log('Failed to backfill address for', p._id, e.message);
@@ -137,10 +140,11 @@ exports.geocodePothole = async (req, res) => {
     if (pothole.address) return res.json({ success: true, pothole });
 
     const geo = await reverseGeocode(pothole.gpsLat, pothole.gpsLon);
-    const full = geo?.fullAddress || `${pothole.gpsLat}, ${pothole.gpsLon}`;
+    const full = geo?.fullAddress || 'Address unavailable';
 
     pothole.address = full;
     await pothole.save();
+
 
     console.log('Geocoded pothole', pothole._id, '->', full);
     return res.json({ success: true, pothole });

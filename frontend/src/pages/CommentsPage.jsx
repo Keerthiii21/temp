@@ -53,7 +53,7 @@ export default function CommentsPage(){
           >
             {potholes.map(ph=> (
               <option key={ph._id} value={ph._id}>
-                {ph.address || `${ph.gpsLat.toFixed(4)}, ${ph.gpsLon.toFixed(4)}`}
+                {ph.address || 'Address unavailable'}
               </option>
             ))}
           </select>
@@ -65,7 +65,7 @@ export default function CommentsPage(){
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-blue-400 font-semibold mb-1">Location</p>
-                <p className="text-dark-300">{selectedPothole.address || `Lat: ${selectedPothole.gpsLat.toFixed(5)}, Lon: ${selectedPothole.gpsLon.toFixed(5)}`}</p>
+                <p className="text-dark-300">{selectedPothole.address || 'Address unavailable'}</p>
               </div>
               <div className="text-right">
                 <p className="text-blue-400 font-semibold mb-1">Depth</p>

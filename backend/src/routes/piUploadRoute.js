@@ -47,11 +47,11 @@ async function getAddressFromCoords(lat, lon) {
 
     if (parts.length > 0) return parts.join(', ');
 
-    // Final fallback: coords string
-    return `${lat}, ${lon}`;
+    // Final fallback: return null so we don't store GPS coordinates as the address
+    return null;
   } catch (err) {
     console.log('Reverse geocoding failed:', err.message);
-    return `${lat}, ${lon}`;
+    return null;
   }
 }
 
@@ -80,10 +80,10 @@ router.post('/pi-upload', upload.single('image'), async (req, res) => {
           return res.status(500).json({ success: false, message: 'Image upload failed', error });
         }
 
-        // Normalize timestamp - store a proper Date object (treat incoming as UTC; accept seconds or ms)
-        let ts = parseIncomingTimestamp(timestamp);
+        // TIMESTAMP: set receipt time server-side (UTC) so DB captures exact arrival time from Pi
+        let ts = new Date();
 
-        console.log('Received PI upload coords:', gpsLat, gpsLon, 'timestamp(UTC ms):', ts.getTime(), 'resolved address:', address);
+        console.log('Received PI upload coords (server timestamp):', gpsLat, gpsLon, 'timestamp(UTC ms):', ts.getTime(), 'resolved address:', address);
 
         const pothole = new Pothole({
           imageUrl: result.secure_url,

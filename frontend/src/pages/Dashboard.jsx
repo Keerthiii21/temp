@@ -96,7 +96,7 @@ export default function Dashboard(){
                     </td>
                     <td className="py-4 px-4 text-dark-300">{ph.gpsLat.toFixed(4)}, {ph.gpsLon.toFixed(4)}</td>
                     <td className="py-4 px-4 text-dark-300">{ph.depthCm ?? '—'}</td>
-                    <td className="py-4 px-4 text-dark-300">{ph.address || `${ph.gpsLat.toFixed(4)}, ${ph.gpsLon.toFixed(4)}`}</td>
+                    <td className="py-4 px-4 text-dark-300">{ph.address || 'Address unavailable'}</td>
                     <td className="py-4 px-4 text-dark-500 text-xs">{formatToIST(ph.timestamp)}</td>
                   </tr>
                 ))}
