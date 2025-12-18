@@ -1,10 +1,11 @@
 import Card from './Card'
+import { formatToIST } from '../utils/time'
 
 export default function CommentCard({ comment }) {
   if (!comment) return null
   
   const initials = comment.userId?.name?.[0]?.toUpperCase() || 'U'
-  const timeAgo = new Date(comment.createdAt).toLocaleDateString()
+  const timeAgo = formatToIST(comment.createdAt)
 
   return (
     <Card className="animate-fade-in">

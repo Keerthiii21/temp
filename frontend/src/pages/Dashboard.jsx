@@ -4,6 +4,7 @@ import { listPotholes } from '../api/potholeApi'
 import StatsCard from '../components/StatsCard'
 import Card from '../components/Card'
 import { Zap, Gauge, Clock, MapPin } from 'lucide-react'
+import { formatToIST, istDateYMD } from '../utils/time'
 
 export default function Dashboard(){
   const [potholes, setPotholes] = useState([])
@@ -16,8 +17,8 @@ export default function Dashboard(){
       setPotholes(data)
       
       // Calculate stats
-      const today = new Date().toDateString()
-      const todayPotholes = data.filter(p => new Date(p.timestamp).toDateString() === today).length
+      const today = istDateYMD(new Date())
+      const todayPotholes = data.filter(p => istDateYMD(p.timestamp) === today).length
       const avgDepth = data.length > 0 ? Math.round(data.reduce((sum, p) => sum + (p.depthCm || 0), 0) / data.length) : 0
       const lastTime = data[0]?.timestamp
       
@@ -60,7 +61,7 @@ export default function Dashboard(){
                     <div className="text-xs space-y-1 text-dark-900">
                       <div><strong>Depth:</strong> {ph.depthCm ?? 'N/A'} cm</div>
                       <div><strong>Coords:</strong> {ph.gpsLat.toFixed(5)}, {ph.gpsLon.toFixed(5)}</div>
-                      <div className="text-dark-500">{new Date(ph.timestamp).toLocaleString()}</div>
+                      <div className="text-dark-500">{formatToIST(ph.timestamp)}</div>
                     </div>
                   </div>
                 </Popup>
@@ -95,8 +96,8 @@ export default function Dashboard(){
                     </td>
                     <td className="py-4 px-4 text-dark-300">{ph.gpsLat.toFixed(4)}, {ph.gpsLon.toFixed(4)}</td>
                     <td className="py-4 px-4 text-dark-300">{ph.depthCm ?? '—'}</td>
-                    <td className="py-4 px-4 text-dark-300">{ph.address || '—'}</td>
-                    <td className="py-4 px-4 text-dark-500 text-xs">{new Date(ph.timestamp).toLocaleString()}</td>
+                    <td className="py-4 px-4 text-dark-300">{ph.address || `${ph.gpsLat.toFixed(4)}, ${ph.gpsLon.toFixed(4)}`}</td>
+                    <td className="py-4 px-4 text-dark-500 text-xs">{formatToIST(ph.timestamp)}</td>
                   </tr>
                 ))}
               </tbody>

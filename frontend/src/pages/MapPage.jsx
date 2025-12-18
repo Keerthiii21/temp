@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import { listPotholes } from '../api/potholeApi'
+import { listPotholes, geocodePothole } from '../api/potholeApi'
 import Card from '../components/Card'
 import { Filter } from 'lucide-react'
+import { formatToIST } from '../utils/time'
 
 export default function MapPage(){
   const [potholes, setPotholes] = useState([])
@@ -16,6 +17,24 @@ export default function MapPage(){
     const iv = setInterval(fetch, 10000)
     return ()=> clearInterval(iv)
   },[])
+
+  // When user clicks a marker, if address missing ask backend to geocode & persist, then select
+  const handleSelect = async (ph) => {
+    try {
+      if (!ph.address) {
+        const res = await geocodePothole(ph._id);
+        const updated = res.data.pothole;
+        setPotholes(prev => prev.map(p => p._id === updated._id ? updated : p));
+        setSelectedPothole(updated);
+      } else {
+        setSelectedPothole(ph);
+      }
+    } catch (e) {
+      console.error('Failed to geocode pothole:', e.message || e);
+      // fallback: show coords as address
+      setSelectedPothole({ ...ph, address: `${ph.gpsLat}, ${ph.gpsLon}` });
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-dark-900 via-dark-900 to-dark-800 flex flex-col">
@@ -31,14 +50,14 @@ export default function MapPage(){
             <MapContainer center={[37.7749, -122.4194]} zoom={12} style={{height:'100%'}}>
               <TileLayer attribution="&copy; OpenStreetMap contributors" url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
               {potholes.map(ph=> (
-                <Marker key={ph._id} position={[ph.gpsLat, ph.gpsLon]} eventHandlers={{ click: () => setSelectedPothole(ph) }}>
+                <Marker key={ph._id} position={[ph.gpsLat, ph.gpsLon]} eventHandlers={{ click: () => handleSelect(ph) }}>
                   <Popup>
                     <div style={{minWidth:200}}>
                       {ph.imageUrl && <img src={ph.imageUrl} alt="pothole" style={{width:'100%',height:120,objectFit:'cover',borderRadius:6,marginBottom:8}} />}
                       <div className="text-xs space-y-1 text-dark-900">
                         <div><strong>Depth:</strong> {ph.depthCm ?? 'N/A'} cm</div>
                         <div><strong>Coords:</strong> {ph.gpsLat.toFixed(5)}, {ph.gpsLon.toFixed(5)}</div>
-                        <div className="text-dark-500">{new Date(ph.timestamp).toLocaleString()}</div>
+                        <div className="text-dark-500">{formatToIST(ph.timestamp)}</div>
                       </div>
                     </div>
                   </Popup>
@@ -69,11 +88,11 @@ export default function MapPage(){
                 </div>
                 <div>
                   <p className="text-dark-400 text-xs">ADDRESS</p>
-                  <p className="font-medium">{selectedPothole.address || '—'}</p>
+                  <p className="font-medium">{selectedPothole.address}</p>
                 </div>
                 <div>
                   <p className="text-dark-400 text-xs">REPORTED</p>
-                  <p className="font-medium text-xs">{new Date(selectedPothole.timestamp).toLocaleString()}</p>
+                  <p className="font-medium text-xs">{formatToIST(selectedPothole.timestamp)}</p>
                 </div>
               </div>
             ) : (
