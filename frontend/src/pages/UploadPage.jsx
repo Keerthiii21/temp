@@ -37,6 +37,11 @@ export default function UploadPage(){
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map)
 
+      // Ensure the map correctly sizes after render (fixes blank map tiles)
+      setTimeout(() => map.invalidateSize && map.invalidateSize(), 200)
+      const resizeHandler = () => map.invalidateSize && map.invalidateSize()
+      window.addEventListener('resize', resizeHandler)
+
       map.on('click', async (e) => {
         const { lat, lng } = e.latlng
         placeMarker([lat, lng])
@@ -44,13 +49,25 @@ export default function UploadPage(){
       })
 
       mapRef.current = map
+
+      // cleanup listener if effect reruns/unmounts
+      const cleanup = () => window.removeEventListener('resize', resizeHandler)
+      // store cleanup so the effect cleanup can call it
+      mapRef.current._cleanupResize = cleanup
     }
 
+    const onContent = () => init()
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', init)
-      return () => document.removeEventListener('DOMContentLoaded', init)
+      document.addEventListener('DOMContentLoaded', onContent)
     } else {
-      init()
+      onContent()
+    }
+
+    return () => {
+      document.removeEventListener('DOMContentLoaded', onContent)
+      if (mapRef.current && mapRef.current._cleanupResize) {
+        try { mapRef.current._cleanupResize() } catch(_){}
+      }
     }
   }, [])
 
